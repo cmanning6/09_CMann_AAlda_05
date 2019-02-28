@@ -21,8 +21,8 @@ class Hashtable<T>
 		return hCode%capacity;
 	}
 
-	public T hash(T obj) {
-		obj.hashCode%capacity;
+	public int hash(T obj) {
+		return obj.hashCode%capacity;
 	}
 
 	protected void rehash() {
@@ -80,5 +80,16 @@ class Hashtable<T>
 		table[home] == null ? return null : ;
 		obj.compareTo(table[home]) == 0 ? return table[home] : ;
 		return recRemove((home+1)%capacity);
+	}
+
+	public int search(T obj) {
+		int home = hash(obj);
+		recSearch(obj, home, 0);
+	}
+
+	private int recSearch(T obj, int nextAddr, int n) {
+		if (table[nextAddr] == null) return (n+1)*-1;
+		if (table[nextAddr].compareTo(obj) == 0) return n+1;
+		return recSearch(obj, (nextAddr+1)%capacity, n+1);
 	}
 }
