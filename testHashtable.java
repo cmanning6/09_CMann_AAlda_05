@@ -14,21 +14,21 @@ class testHashtable {
 
 	public static void commandAction(char c) {
 		switch(c) {
-			case 'c' : 
-			case 'C' : 
-				getCommand();
-				break;
-			case 'g' : 
-			case 'G' : 
+			case 'g' :
+			case 'G' :
 				createHashtable();
 				break;
-			case 'a' : 
-			case 'A' : 
+			case 'a' :
+			case 'A' :
 				insertMember();
 				break;
-			case 'h' : 
-			case 'H' : 
-			case '?' : 
+			case 'c' :
+			case 'C' :
+				print();
+				break;
+			case 'h' :
+			case 'H' :
+			case '?' :
 				printMenu();
 				break;
 			case 'q' : 
@@ -36,6 +36,7 @@ class testHashtable {
 				programSentinel = false;
 				break;
 			default : 
+				getCommand();
 				break;	
 		}
 	}
@@ -53,7 +54,8 @@ class testHashtable {
 		int ldf = input.nextInt();
 		hTable = new Hashtable<Member>(cap, ldf, 20);
 
-		for(int i = 0; i < 40/*cap*ldf*/; ++i)
+		//FIXME : temp limit for testing purposes
+		for(int i = 0; i < 30/*cap*ldf*/; ++i)
 			hTable.put(getMember());
 	}
 
@@ -65,17 +67,51 @@ class testHashtable {
 	}
 
 	private static void print() {
-        System.out.println("+======================================================+");
-        System.out.println("|                Contents of Hash Table                |");            
-        System.out.printf(" |[Capacity-%d, Size-%d Load Fac.-%d%, Increment-0.2] |"
-        					, hTable.capacity,hTable.size,hTable.maximumLoadFactor);            
-        System.out.println("+======================================================+");            
-        System.out.println("|         Object Value         |Current| Home  |Displac|");            
-        System.out.println("|                              |Address|Address| ement |");            
-                        
-                        
-                        
-              
+		int totDisplaced = 0;
+		double average = 0.0;
+		boolean print = true;
+
+        System.out.println("+===========================================================+");
+        System.out.println("|                Contents of Hash Table                     |");            
+        System.out.printf("|Capacity-%d,    Size-%d                                    |\n"
+        					, hTable.capacity, hTable.size);            
+        System.out.printf("|Load Fac.-%.2f, Increment-0.2                              |\n"
+        					,((double)hTable.maximumLoadFactor)/100);
+        System.out.println("+===========================================================+");            
+        System.out.println("|         Object Value              |Current| Home  |Displac|");            
+        System.out.println("|                                   |Address|Address| ement |");            
+        for(int i = 0; i < hTable.capacity; ++i){
+        	if (hTable.table[i] == null){
+        		if (print) {
+        		System.out.println("+-----------------------------------------------------------+");
+        		System.out.printf("| %33s | %5d |       |       |\n",
+        							" ", i);
+        		}
+        	} else {
+        		String mem = hTable.table[i].toString().substring(0, 33);
+        		int disp = i - (hTable.table[i].hashCode())%hTable.capacity;
+	        	if (print) {
+        			System.out.println("+-----------------------------------------------------------+");
+	        		System.out.printf("| %s | %5d | %5d | %5d |\n",
+	        						mem, i,
+	        						i + disp,
+	        						disp);
+	        	}
+	        	if (disp > 0) {
+	        		average = average + ((disp-average)/++totDisplaced);
+	        		disp = 0;
+	        	}
+	        }
+	        if ((i+1)%10 == 0 && print) {
+	        	System.out.printf("\t\t\t%d more record(s) to list (Q/q to quit) : ",
+	        	 hTable.capacity - i - 1);
+	        	if (input.next().charAt(0) == 'q')
+	        		print = false;
+	        }
+        }
+        System.out.printf("|       Displacement: Total = %d Average = %.2f             |\n",
+        	totDisplaced, average);
+        System.out.println("+-----------------------------------------------------------+");
     }
 
 	public static Member getMember(){

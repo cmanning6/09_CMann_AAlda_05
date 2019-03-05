@@ -37,7 +37,7 @@ class Hashtable<T extends Comparable<T>>
 	protected void rehash() {
 		Object tmpTable[] = table;
 
-		capacity = (int) (capacity * 1+incPercentage);
+		capacity = (int) (capacity * (1+incPercentage));
 		table = new Object[capacity];
 		size = 0;
 		for (int i  =0; i < tmpTable.length; ++i) {
