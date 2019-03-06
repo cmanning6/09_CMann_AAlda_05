@@ -26,6 +26,10 @@ class testHashtable {
 			case 'C' :
 				print();
 				break;
+			case 'r' :
+			case 'R' :
+				promptRemove();
+				break;
 			case 'h' :
 			case 'H' :
 			case '?' :
@@ -55,8 +59,9 @@ class testHashtable {
 		hTable = new Hashtable<Member>(cap, ldf, 20);
 
 		//FIXME : temp limit for testing purposes
-		for(int i = 0; i < 30/*cap*ldf*/; ++i)
+		for(int i = 0; i < cap*((float) ldf) / 100; ++i) {
 			hTable.put(getMember());
+		}
 	}
 
 	public static void insertMember() {
@@ -88,13 +93,15 @@ class testHashtable {
         							" ", i);
         		}
         	} else {
-        		String mem = hTable.table[i].toString().substring(0, 33);
-        		int disp = i - (hTable.table[i].hashCode())%hTable.capacity;
+        		Member mem = (Member) hTable.table[i];
+        		String memStr = mem.toString().substring(0, 33);
+        		int home = hTable.hash(mem.getID());
+        		int disp = hTable.distance(i, home)%hTable.capacity;
 	        	if (print) {
         			System.out.println("+-----------------------------------------------------------+");
 	        		System.out.printf("| %s | %5d | %5d | %5d |\n",
-	        						mem, i,
-	        						i + disp,
+	        						memStr, i,
+	        						home,
 	        						disp);
 	        	}
 	        	if (disp > 0) {
@@ -112,6 +119,19 @@ class testHashtable {
         System.out.printf("|       Displacement: Total = %d Average = %.2f             |\n",
         	totDisplaced, average);
         System.out.println("+-----------------------------------------------------------+");
+    }
+
+    public static void promptRemove() {
+    	System.out.print("Enter ID or hash code to be removed: ");
+    	int index = hTable.hash(input.nextInt());
+    	System.out.println();
+    	if (hTable.table[index] == null)
+    		System.out.println("Member does not exist.");
+    	else {
+    		Member mem = (Member) hTable.table[index];
+    		hTable.remove(hTable.hash(mem.getID()));
+    		System.out.printf("%s removed.\n", mem.toString().substring(0, 33));
+    	}
     }
 
 	public static Member getMember(){

@@ -17,13 +17,19 @@ class Hashtable<T extends Comparable<T>>
 	}
 
 	public Hashtable<T> put(T obj) {
-		int home = hash(obj.hashCode());
+		int home = hash(getID(obj));
 
 		while (table[home] != null) home = (home+1)%capacity;
 		table[home] = obj;
 		++size;
 		if ((((float) size) / capacity * 100) > maximumLoadFactor) rehash();
 		return this;
+	}
+
+	public int getID(T mem) {
+		String obj[] = mem.toString().substring(0,11).split("-");
+		String id = obj[0] + obj[1] + obj[2];
+		return Integer.parseInt(id);
 	}
 
 	public int hash(int hCode) {
@@ -55,18 +61,16 @@ class Hashtable<T extends Comparable<T>>
 		if (table[start] == null ||
 			 obj.compareTo((T) table[start]) == 0) return start;
 		return recLocate(obj, (start+1)%capacity);
-		//home = (home+1)%table.length;
 	}
 
-	public T remove(T obj) {
-		int addr = locate(obj);
-		T tmpObj = (T) table[addr];
+	public T remove(int index) {
+		if (table[index] == null) return null;
+		--size;
+		T tmp = (T) table[index];
+		table[index] = null;
+		shift();
 
-		if (obj == null) return null;
-		table[addr] = null; --size;
-		shift(addr, (addr+1)%capacity);
-
-		return recRemove(obj, addr);
+		return tmp;
 	}
 
 	protected T recRemove(T obj, int start) {
@@ -75,21 +79,18 @@ class Hashtable<T extends Comparable<T>>
 		return (obj.compareTo((T) table[start]) == 0) ? (T) table[start]
 				 : recRemove(obj, (start+1)%capacity);
 	}
-	protected void shift(int empty, int objLocation) {
-		if (table[objLocation] == null) return;
-		int home = hash((T) table[objLocation]);
-		int emptyToHome = distance(home, empty);
-		int currToHome = distance(home, objLocation);
+	protected void shift() {
+		Object tmpTable[] = table;
 
-		if (emptyToHome > currToHome) shift(empty, (objLocation+1)%capacity);
-		else {
-			table[empty] = table[objLocation];
-			table[objLocation] = null;
-			shift(objLocation, (objLocation+1)%capacity);
+		table = new Object[capacity];
+		size = 0;
+		for (int i  =0; i < tmpTable.length; ++i) {
+			if (tmpTable[i] != null)
+				put((T) tmpTable[i]);
 		}
 	}
 
-	protected int distance(int from, int to) {
+	public int distance(int from, int to) {
 		return from > to ? from - to : from+(capacity-to);
 	}
 
