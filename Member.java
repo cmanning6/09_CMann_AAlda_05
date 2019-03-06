@@ -21,6 +21,10 @@ public class Member implements Comparable<Member> {
         lastName = Names.lastName[rnd.nextInt(Names.lastName.length)];
     }
 
+    public int getID() {
+        return ID;
+    }
+
     public String toString() { return String.format("%03d-%02d-%04d %10s %10s",
             ID / 1000000, (ID / 10000) % 100, ID % 10000, lastName, firstName);   
     }
