@@ -52,15 +52,15 @@ class Hashtable<T extends Comparable<T>>
 		}
 	}
 
-	protected int locate(T obj) {
-		int home = hash(obj);
-		return recLocate(obj, home);
+	protected int locate(int id) {
+		int home = hash(id);
+		return recLocate(id, home);
 	}
 
-	protected int recLocate(T obj, int start) {
+	protected int recLocate(int id, int start) {
 		if (table[start] == null ||
-			 obj.compareTo((T) table[start]) == 0) return start;
-		return recLocate(obj, (start+1)%capacity);
+			 id == getID((T) table[start])) return start;
+		return recLocate(id, (start+1)%capacity);
 	}
 
 	public T remove(int index) {

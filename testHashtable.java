@@ -123,13 +123,13 @@ class testHashtable {
 
     public static void promptRemove() {
     	System.out.print("Enter ID or hash code to be removed: ");
-    	int index = hTable.hash(input.nextInt());
+    	int index = hTable.locate(input.nextInt());
     	System.out.println();
     	if (hTable.table[index] == null)
     		System.out.println("Member does not exist.");
     	else {
     		Member mem = (Member) hTable.table[index];
-    		hTable.remove(hTable.hash(mem.getID()));
+    		hTable.remove(index);
     		System.out.printf("%s removed.\n", mem.toString().substring(0, 33));
     	}
     }
@@ -171,10 +171,10 @@ class testHashtable {
 		System.out.println("|          |   into the hash table. Display the newly added   +----------+--------------------------------------------------+");
 		System.out.println("|          |  member, its home address and current address.   |   b B    |Display information on blocks formed by contiguous|");
 		System.out.println("+----------+--------------------------------------------------+          |data or empty cells inside table. For each block, |");
-		System.out.println("|   r R    | Ask for an ID or hash code of an object. Remove  |          |display the type of block (either data or empty), |");
+		System.out.println("|   r R    | Ask for an ID of an object. Remove               |          |display the type of block (either data or empty), |");
 		System.out.println("|          |     the object whose ID matchs the given ID.     |          |the starting and ending addresses, size of block. |");
 		System.out.println("+----------+--------------------------------------------------+          |At the end of block listing, show the total number|");
-		System.out.println("|   f F    |   Ask for an ID or hash code, of a object,       |          |   of blocks, the maximum, the minimum and the    |");
+		System.out.println("|   f F    |   Ask for an ID of a object,                     |          |   of blocks, the maximum, the minimum and the    |");
 		System.out.println("|          | display the object, ID current address and home  |          |  average block sizes, for each type. Allow quit  |");
 		System.out.println("|          |                     address.                     |          | listing the total, maximum, minimum and average  |");
 		System.out.println("+----------+--------------------------------------------------+          |must show the correct data even if the listing of |");
