@@ -217,18 +217,25 @@ public static Member getMember()
 	
 
 public static void showTimeComplexity() {
+	double PHS = 0; //Practical Hashtable Successful
+	double PHU = 0; //Practical Hashtable Unsuccessful
+	double THS = 0; //Theoretic Hashtable Successful
+	double THU = 0; //Theoretic Hashtable Unsuccessful
+	double TBS = 0; //Theoretical Binary Search
+
 	clearScreen();
-    System.out.println("+========================================================================+");
-    System.out.println("|          Time Complexities of Practical & Theoretic Hashtable          |");
+    	System.out.println("+========================================================================+");
+	System.out.println("|          Time Complexities of Practical & Theoretic Hashtable          |");
 	System.out.println("|              Search vs. Theoretic Binary Search Algorithm              |");
 	System.out.println("+========================================================================+");
 	System.out.println("|  Practical  |  Practical  |  Theoretic  |  Theoretic  |   Theoretical  |");
 	System.out.println("|  Hashtable  |  Hashtable  |  Hashtable  |  Hashtable  |     Binary     |");
 	System.out.println("|  Successful | Unsuccessful|  Successful | Unsuccessful|     Search     |");
 	System.out.println("+-------------+-------------+-------------+-------------+----------------+");
-	System.out.println("|             |             |             |             |                |");
+	System.out.printf("|    %.2f     |    %.2f     |    %.2f     |    %.2f     |      %.2f      |\n",PHS,PHU,THS,THU,TBS);
 	System.out.println("+-------------+-------------+-------------+-------------+----------------+");
 	System.out.println();
+
 
 }
 
