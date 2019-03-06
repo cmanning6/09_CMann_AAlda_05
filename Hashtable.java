@@ -37,7 +37,7 @@ class Hashtable<T extends Comparable<T>>
 	}
 
 	public int hash(T obj) {
-		return obj.hashCode()%capacity;
+		return getID(obj)%capacity;
 	}
 
 	protected void rehash() {
@@ -58,8 +58,8 @@ class Hashtable<T extends Comparable<T>>
 	}
 
 	protected int recLocate(int id, int start) {
-		if (table[start] == null ||
-			 id == getID((T) table[start])) return start;
+		if (table[start] == null) return -1;
+		if (id == getID((T) table[start])) return start;
 		return recLocate(id, (start+1)%capacity);
 	}
 
