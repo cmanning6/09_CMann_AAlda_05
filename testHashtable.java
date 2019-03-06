@@ -42,6 +42,22 @@ public static void commandAction(char c)
 		case 'I' :
 			promptRemoveAt();
 			break;
+		case 't' :
+		case 'T' :
+			showTimeComplexity();
+			break;
+		case 'b' :
+		case 'B' :
+			blockInfo();
+			break;
+		case 'p' :
+		case 'P' :
+			listParameters();
+			break;
+		case 'v' :
+		case 'V' :
+			verifyReachable();
+			break;
 		case 'h' :
 		case 'H' :
 		case '?' :
@@ -198,14 +214,64 @@ public static Member getMember()
 			return new Member();
 	}
 }
+	
+
+public static void showTimeComplexity() {
+	clearScreen();
+    System.out.println("+========================================================================+");
+    System.out.println("|          Time Complexities of Practical & Theoretic Hashtable          |");
+	System.out.println("|              Search vs. Theoretic Binary Search Algorithm              |");
+	System.out.println("+========================================================================+");
+	System.out.println("|  Practical  |  Practical  |  Theoretic  |  Theoretic  |   Theoretical  |");
+	System.out.println("|  Hashtable  |  Hashtable  |  Hashtable  |  Hashtable  |     Binary     |");
+	System.out.println("|  Successful | Unsuccessful|  Successful | Unsuccessful|     Search     |");
+	System.out.println("+-------------+-------------+-------------+-------------+----------------+");
+	System.out.println("|             |             |             |             |                |");
+	System.out.println("+-------------+-------------+-------------+-------------+----------------+");
+	System.out.println();
+
+}
+
+public static void blockInfo() {
+	clearScreen();
+	System.out.println("+===================================================+");
+	System.out.println("|        Information on Data and Blank Blocks       |");
+	System.out.println("+===================================================+");
+	System.out.println("|  Block Type  |   Starting   |   Ending   |  Size  |");
+	System.out.println("+--------------+--------------+------------+--------+");
+
+
+
+	System.out.println();
+
+}
+
+public static void listParameters() {
+
+	clearScreen();
+    System.out.println("+=====================================================================+");
+    System.out.println("|                  Parameters of the Hash Table                       |");
+	System.out.println("+=====================================================================+");
+	System.out.println("|  Capacity  |    Size    |  Increment  |  Specified  |  Actual Load  |");
+	System.out.println("|            |            |             | Load Factor |     Factor    |");
+	System.out.println("+------------+------------+-------------+-------------+---------------+");
+	System.out.printf("|    %3d     |    %3d     |     %.2f    |   %4d      |    %4d       |\n",hTable.capacity,hTable.size,hTable.incPercentage,hTable.maximumLoadFactor,hTable.maximumLoadFactor);
+	System.out.println("+------------+------------+-------------+-------------+---------------+");
+	System.out.println();
+
+}
+
+public static void verifyReachable() {
+
+}
 
 
 public static void printMenu() 
 {
 	clearScreen();
 	System.out.println("+===========================================================================================================================+");
-	System.out.println("|                                               Implementation of Hashtable                                                |");
-	System.out.println("|                                                       Assignment                                                         |");
+	System.out.println("|                                                Implementation of Hashtable                                                |");
+	System.out.println("|                                                        Assignment                                                         |");
 	System.out.println("+===========================================================================================================================+");
 	System.out.println("| Command  |                   Description                    | Command  |                   Description                    |");
 	System.out.println("+----------+--------------------------------------------------+----------+--------------------------------------------------|");
