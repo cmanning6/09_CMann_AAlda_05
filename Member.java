@@ -21,6 +21,11 @@ public class Member implements Comparable<Member> {
         lastName = Names.lastName[rnd.nextInt(Names.lastName.length)];
     }
 
+    @Override
+    public int hashCode() {
+        return ID;
+    }
+
     public int getID() {
         return ID;
     }

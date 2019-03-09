@@ -159,7 +159,7 @@ private static void print()
 public static void promptRemove() 
 {
 	clearScreen();
-	System.out.print("Enter ID or hash code to be removed: ");
+	System.out.print("Enter ID to be removed: ");
 	int index = hTable.locate(input.nextInt());
 	System.out.println();
 	if (index < 0)
@@ -176,10 +176,10 @@ public static void promptRemoveAt()
 	System.out.print("Enter index to remove : ");
 	int index = input.nextInt();
 	System.out.println();
-	if (index < hTable.capacity) {
+	if ((index < hTable.capacity) && (hTable.table[index] != null)) {
 		System.out.printf("%s removed\n", hTable.remove(index).toString().substring(0,33));
 	} else {
-		System.out.println("Index is out of bounds.");
+		System.out.println("Index does not exist.");
 	}
 }
 
@@ -218,10 +218,27 @@ public static Member getMember()
 
 public static void showTimeComplexity() {
 	double PHS = 0; //Practical Hashtable Successful
+	int reachable = 0;
 	double PHU = 0; //Practical Hashtable Unsuccessful
+	int unreachable = 0;
 	double THS = 0; //Theoretic Hashtable Successful
 	double THU = 0; //Theoretic Hashtable Unsuccessful
 	double TBS = 0; //Theoretical Binary Search
+	int index = 0;  //Home index for search item
+
+	for (int i = 0; i < hTable.capacity ; ++i) {
+		if ((index = hTable.locate((Member) hTable.table[i])) > -2) {
+			PHS += (index+i+1);
+			++reachable;
+		} else {
+			PHU += (index+i+1);
+			++unreachable;
+		}
+	}
+	PHS /= reachable;
+	PHU /= unreachable;
+	THS = (1 + 1.0/(1-reachable))/2;
+	THU = (1+1.0/(pow(1-unreachable, 2)))/2;
 
 	clearScreen();
     	System.out.println("+========================================================================+");
@@ -232,11 +249,19 @@ public static void showTimeComplexity() {
 	System.out.println("|  Hashtable  |  Hashtable  |  Hashtable  |  Hashtable  |     Binary     |");
 	System.out.println("|  Successful | Unsuccessful|  Successful | Unsuccessful|     Search     |");
 	System.out.println("+-------------+-------------+-------------+-------------+----------------+");
-	System.out.printf("|    %.2f     |    %.2f     |    %.2f     |    %.2f     |      %.2f      |\n",PHS,PHU,THS,THU,TBS);
+	System.out.printf("|    %.2f     |    %.2f     |    %.2f     |    %.2f     |      %.2f      |\n"
+		,PHS,PHU,THS,THU,TBS);
 	System.out.println("+-------------+-------------+-------------+-------------+----------------+");
 	System.out.println();
 
 
+}
+
+private static double pow(double num, int pow) {
+	for (int i = 1; i < num ; ++i) {
+		num *= num;
+	}
+	return num;
 }
 
 public static void blockInfo() {
@@ -262,14 +287,27 @@ public static void listParameters() {
 	System.out.println("|  Capacity  |    Size    |  Increment  |  Specified  |  Actual Load  |");
 	System.out.println("|            |            |             | Load Factor |     Factor    |");
 	System.out.println("+------------+------------+-------------+-------------+---------------+");
-	System.out.printf("|    %3d     |    %3d     |     %.2f    |   %4d      |    %4d       |\n",hTable.capacity,hTable.size,hTable.incPercentage,hTable.maximumLoadFactor,hTable.maximumLoadFactor);
+	System.out.printf("| %10d | %10d |    %3d%%     |   %4d%%     |    %4d%%      |\n",
+		hTable.capacity,
+		hTable.size,(int) (hTable.incPercentage*100),
+		hTable.maximumLoadFactor,
+		((int) (((double) hTable.size)/hTable.capacity*100)));
 	System.out.println("+------------+------------+-------------+-------------+---------------+");
 	System.out.println();
 
 }
 
 public static void verifyReachable() {
+	int reachable = 0, unreachable = 0;
 
+	for(int i = 0; i < hTable.capacity; ++i) {
+		if (hTable.locate((Member) hTable.table[i]) > -2) ++reachable;
+		else ++unreachable; 
+	}
+	clearScreen();
+	System.out.printf("Hashtable size = %d\nReachable Members = %d\n" + 
+		"Unreachable Members = %d\n\n",
+		 hTable.capacity, reachable, unreachable);
 }
 
 
@@ -284,7 +322,7 @@ public static void printMenu()
 	System.out.println("+----------+--------------------------------------------------+----------+--------------------------------------------------|");
 	System.out.println("|   g G    |  Prompt for two integers, the capacity and the   |   t T    | Perform a successful search on each of object in |");
 	System.out.println("|          |  load factor of a hash table. Create a new hash  |show Time | the hash table, and 'capacity' many unsuccessful |");
-	System.out.println("|          |table, with 20% as increment percentage, generate |Complexity| searches, list the (1) avareage comparions from  |");
+	System.out.println("|          |table, with 20% as increment percentage, generate |Complexity| searches, list the (1) average comparions from   |");
 	System.out.println("|          |(capacity * load factor) many mixed Member objects|of Bin. & |all successful searchs, the theoretic susccessful |");
 	System.out.println("|          |         and add them to the hash table.          |Hash. Srch|search complexity [(1 + 1/(1-a))/2], and the      |");
 	System.out.println("+----------+--------------------------------------------------+See exampl|theoretical un-successful search time complexity  |");

@@ -17,7 +17,7 @@ class Hashtable<T extends Comparable<T>>
 	}
 
 	public Hashtable<T> put(T obj) {
-		int home = hash(getID(obj));
+		int home = hash(obj);
 
 		while (table[home] != null) home = (home+1)%capacity;
 		table[home] = obj;
@@ -37,7 +37,7 @@ class Hashtable<T extends Comparable<T>>
 	}
 
 	public int hash(T obj) {
-		return getID(obj)%capacity;
+		return obj.hashCode()%capacity;
 	}
 
 	protected void rehash() {
@@ -52,15 +52,24 @@ class Hashtable<T extends Comparable<T>>
 		}
 	}
 
-	protected int locate(int id) {
-		int home = hash(id);
-		return recLocate(id, home);
+	protected int locate(T obj) {
+		if (obj == null) {
+			return -1;
+		}
+		return locate(obj.hashCode());
 	}
 
-	protected int recLocate(int id, int start) {
-		if (table[start] == null) return -1;
-		if (id == getID((T) table[start])) return start;
-		return recLocate(id, (start+1)%capacity);
+	protected int locate(int hCode) {
+		int home = hash(hCode);
+		for(int i = 0; ; ++i) {
+			if (table[(home+i)%capacity] == null) return -2;
+			if (hCode == getID((T) table[(home+i)%capacity])) 
+				return (home+i)%capacity;
+		}
+	}
+
+	public double loadFactor() {
+		return ((double) size)/capacity;
 	}
 
 	public T remove(int index) {
@@ -68,7 +77,6 @@ class Hashtable<T extends Comparable<T>>
 		--size;
 		T tmp = (T) table[index];
 		table[index] = null;
-		shift();
 
 		return tmp;
 	}
