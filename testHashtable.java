@@ -264,19 +264,132 @@ private static double pow(double num, int pow) {
 	return num;
 }
 
+
 public static void blockInfo() {
+
+	int count = 0;
+	String data = "Empty";
+	int startAddress = 0;
+	int endAddress = 0;
+	int size = 0;
+	int dFlag = 0;
+	int eFlag = 0;
+	int dCount = 0;
+	int eCount = 0;
+	int dMax = 0;
+	int eMax = 0;
+	int dMin = 10;
+	int eMin = 10;
+	float dSize = 0;
+	float eSize = 0;
+
 	clearScreen();
 	System.out.println("+===================================================+");
 	System.out.println("|        Information on Data and Blank Blocks       |");
 	System.out.println("+===================================================+");
 	System.out.println("|  Block Type  |   Starting   |   Ending   |  Size  |");
+	System.out.println("|              |    Address   |   Address  |        |");
 	System.out.println("+--------------+--------------+------------+--------+");
 
+	int i = 0;
+	while (i < 12) {
+		// Member mem = (Member) hTable.table[count];
 
+		//end of table
+		if (count == hTable.capacity) {
+			endAddress = count - 1;
+			size = (endAddress - startAddress) + 1;
+			System.out.printf( "|    %5s     |     %3d      |    %3d     |  %3d   |\n+--------------+--------------+------------+--------+\n",data, startAddress, endAddress, size);
+			if (dFlag == 1) {
+				dSize += size;
+				dCount++;
+				if (size > dMax)
+					dMax = size;
+				if (size < dMin)
+					dMin = size;
+			}
+			else {
+				eSize += size;
+				eCount++;
+				if (size > eMax)
+					eMax = size;
+				if (size < eMin)
+					eMin = size;
+			}
+			break;
+		}
 
+		Member mem = (Member) hTable.table[count];
+
+		//empty
+		if (mem == null) {
+			if (eFlag == 0){
+				dFlag = 0;
+				eFlag = 1;
+
+				if (count != 0) {
+					endAddress = count - 1;
+					size = (endAddress - startAddress) + 1;
+					System.out.printf( "|    %5s     |     %3d      |    %3d     |  %3d   |\n+--------------+--------------+------------+--------+\n",data, startAddress, endAddress, size);
+					dSize += size;
+					dCount++;
+					if (size > dMax)
+						dMax = size;
+					if (size < dMin)
+						dMin = size;
+
+				}
+
+				data = "Empty";
+				startAddress = count;
+				i++;
+			}
+		}
+
+		//full
+		if (mem != null) {
+			if (dFlag == 0){
+				dFlag = 1;
+				eFlag = 0;
+
+				if (count != 0) {
+					endAddress = count - 1;
+					size = (endAddress - startAddress) + 1;
+					System.out.printf( "|    %5s     |     %3d      |    %3d     |  %3d   |\n+--------------+--------------+------------+--------+\n",data, startAddress, endAddress, size);
+					eSize += size;
+					eCount++;
+					if (size > eMax)
+						eMax = size;
+					if (size < eMin)
+						eMin = size;
+				}
+
+				data = "Data";
+				startAddress = count;
+				i++;
+			}
+		}
+
+		count++;
+		if (i == 11) {
+			System.out.println("\t\t\t\tEnter Q/q to quit listing ...");
+			Scanner userInput = new Scanner(System.in);
+			char option = userInput.next(".").charAt(0);
+			if (option == 'q' || option == 'Q')
+				i++;
+			else
+				i = 0;
+		}
+	}
+
+	System.out.println("+------------+-------+---------+---------+----------+");
+	System.out.println("| Block Type | Count | Maximum | Minimum | Avg Size |");
+	System.out.printf( "|    Data    |  %3d  |   %3d   |   %3d   |   %.2f   |\n",dCount,dMax,dMin,dSize/dCount);
+	System.out.printf( "|    Empty   |  %3d  |   %3d   |   %3d   |   %.2f   |\n",eCount,eMax,eMin,eSize/eCount);
+	System.out.println("+------------+-------+---------+---------+----------+");
 	System.out.println();
-
 }
+
 
 public static void listParameters() {
 
