@@ -1,5 +1,14 @@
+/**
+* Authors: Chad Manning, Abraham Aldana
+* Instrucor: Dr. Wang
+* Course: CMPS 3390
+* Created: March 9th, 2019
+* Source: testHashtable.java
+*/
+
 import java.util.Scanner;
 import java.util.Random;
+import java.lang.Math;
 
 class testHashtable 
 {
@@ -15,6 +24,7 @@ public static void main(String[] args)
 	System.out.println("See you later alligator!");
 }
 
+//Determines which function to call based on keystroke
 public static void commandAction(char c) 
 {
 	switch(c) {
@@ -73,12 +83,14 @@ public static void commandAction(char c)
 	}
 }
 
+//Gets keystroke from user
 public static char getCommand() 
 {
 	System.out.print("Enter H/h/? for help, or command : ");
 	return input.next().charAt(0);
 }
 
+//Creates new hashtable with parameters from user
 public static void createHashtable() 
 {
 	clearScreen();
@@ -94,6 +106,7 @@ public static void createHashtable()
 	}
 }
 
+//Inserts new member into hashtable
 public static void insertMember() 
 {
 	Member mem = getMember();
@@ -102,6 +115,7 @@ public static void insertMember()
 	hTable.put(mem);
 }
 
+//Prints contents of hashtable
 private static void print() 
 {
 	int totDisplaced = 0;
@@ -156,6 +170,7 @@ private static void print()
     System.out.println("+-----------------------------------------------------------+");
 }
 
+//Asks user which ID to remove from hashtable
 public static void promptRemove() 
 {
 	clearScreen();
@@ -171,6 +186,7 @@ public static void promptRemove()
 	}
 }
 
+//Asks user which index to remove from table
 public static void promptRemoveAt()
 {
 	System.out.print("Enter index to remove : ");
@@ -183,6 +199,7 @@ public static void promptRemoveAt()
 	}
 }
 
+//Finds a given member ID in the table
 public static void findMember() 
 {
 	System.out.print("Enter ID to locate: ");
@@ -196,6 +213,7 @@ public static void findMember()
 	}
 }	
 
+//Returns a new random member
 public static Member getMember()
 {
 	Random rnd = new Random();
@@ -215,30 +233,31 @@ public static Member getMember()
 	}
 }
 	
-
+//Calculates time complexity of hash search
 public static void showTimeComplexity() {
 	double PHS = 0; //Practical Hashtable Successful
-	int reachable = 0;
 	double PHU = 0; //Practical Hashtable Unsuccessful
-	int unreachable = 0;
 	double THS = 0; //Theoretic Hashtable Successful
 	double THU = 0; //Theoretic Hashtable Unsuccessful
 	double TBS = 0; //Theoretical Binary Search
+	int reachable = 0; //Number of reachable elements
+	int unreachable = 0; //Number of unreachable elements
 	int index = 0;  //Home index for search item
 
 	for (int i = 0; i < hTable.capacity ; ++i) {
-		if ((index = hTable.locate((Member) hTable.table[i])) > -2) {
-			PHS += (index+i+1);
+		if ((index = hTable.locate((Member) hTable.table[i])) >= 0) {
+			PHS += hTable.distance(i, index);
 			++reachable;
 		} else {
-			PHU += (index+i+1);
+			PHU += hTable.distance(i, index);
 			++unreachable;
 		}
 	}
-	PHS /= reachable;
-	PHU /= unreachable;
+	PHS /= hTable.capacity;
+	PHU /= hTable.capacity;
 	THS = (1 + 1.0/(1-reachable))/2;
-	THU = (1+1.0/(pow(1-unreachable, 2)))/2;
+	THU = (1+1.0/(Math.pow(1-unreachable, 2)))/2;
+	TBS = Math.log10(2.0) * Math.log10(hTable.size);
 
 	clearScreen();
     	System.out.println("+========================================================================+");
@@ -249,7 +268,7 @@ public static void showTimeComplexity() {
 	System.out.println("|  Hashtable  |  Hashtable  |  Hashtable  |  Hashtable  |     Binary     |");
 	System.out.println("|  Successful | Unsuccessful|  Successful | Unsuccessful|     Search     |");
 	System.out.println("+-------------+-------------+-------------+-------------+----------------+");
-	System.out.printf("|    %.2f     |    %.2f     |    %.2f     |    %.2f     |      %.2f      |\n"
+	System.out.printf("| %11.2f | %11.2f | %11.2f | %11.2f | %14.2f |\n"
 		,PHS,PHU,THS,THU,TBS);
 	System.out.println("+-------------+-------------+-------------+-------------+----------------+");
 	System.out.println();
@@ -257,13 +276,7 @@ public static void showTimeComplexity() {
 
 }
 
-private static double pow(double num, int pow) {
-	for (int i = 1; i < num ; ++i) {
-		num *= num;
-	}
-	return num;
-}
-
+//Prints out number of data blocks and empty blocks
 public static void blockInfo() {
 	clearScreen();
 	System.out.println("+===================================================+");
@@ -278,6 +291,7 @@ public static void blockInfo() {
 
 }
 
+//List parameters of the hashtable
 public static void listParameters() {
 
 	clearScreen();
@@ -297,6 +311,7 @@ public static void listParameters() {
 
 }
 
+//Determines how many members based on list size are actually reachable
 public static void verifyReachable() {
 	int reachable = 0, unreachable = 0;
 
@@ -311,6 +326,7 @@ public static void verifyReachable() {
 }
 
 
+//Prints menu of commands
 public static void printMenu() 
 {
 	clearScreen();
@@ -350,6 +366,7 @@ public static void printMenu()
 	System.out.println("+----------+--------------------------------------------------+----------+--------------------------------------------------+");
 }
 
+//Clears screen to avoid clutter
 public static void clearScreen() 
 {
 	System.out.print("\033[H\033[2J");
